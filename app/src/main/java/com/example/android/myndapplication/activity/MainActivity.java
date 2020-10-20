@@ -1,33 +1,38 @@
 package com.example.android.myndapplication.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.android.myndapplication.fragments.MainFragment;
 import com.example.android.myndapplication.fragments.MainFragmentTab;
 import com.example.android.myndapplication.R;
+import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
     private TextView appBarTV;
+    MainFragmentTab fragmentTab = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         appBarTV = findViewById(R.id.appbar_text_view);
 
@@ -45,6 +50,13 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        Bundle bundle = new Bundle();
+        bundle.putString("title", "Default");
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        MainFragmentTab fragmentTab = new MainFragmentTab();
+        fragmentTab.setArguments(bundle);
+        ft.replace(R.id.f_container, fragmentTab);
+            ft.commit();
     }
 
     @Override
@@ -83,7 +95,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         drawer.closeDrawers();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
         // Handle navigation view item clicks here.
         int id = item.getItemId();
@@ -91,31 +103,46 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             appBarTV.setText("Main Page");
-            MainFragment fragment = new MainFragment();
-            ft.replace(R.id.f_container, fragment);
-            ft.commit();
-
         } else if (id == R.id.nav_gallery) {
             appBarTV.setText("Fragment With Tabs");
-            MainFragmentTab fragmentTab = new MainFragmentTab();
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            final EditText edittext = new EditText(this);
+            alert.setMessage("Enter Your Message");
+            alert.setTitle("Enter Your Title");
+
+            alert.setView(edittext);
+
+            alert.setPositiveButton("Yes Option", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    //What ever you want to do with the value
+                   // Editable YouEditTextValue = edittext.getText();
+                    //OR
+                    String value = edittext.getText().toString();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("title", value);
+                    if (fragmentTab == null) {
+                        fragmentTab = new MainFragmentTab();
+                        fragmentTab.setArguments(bundle);
+                        ft.replace(R.id.f_container, fragmentTab);
+                        ft.commit();
+                    } else {
+                        fragmentTab.addTabs(value);
+                    }
+
+                }
+            });
+
+            alert.setNegativeButton("No Option", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // what ever you want to do with No option.
+                }
+            });
+
+            alert.show();
+           /* MainFragmentTab fragmentTab = new MainFragmentTab();
             ft.replace(R.id.f_container, fragmentTab);
-            ft.commit();
+            ft.commit();*/
 
-        } else if (id == R.id.nav_slideshow) {
-            appBarTV.setText("Slideshow Page");
-            Toast.makeText(this, "Slideshow", Toast.LENGTH_SHORT).show();
-
-        } else if (id == R.id.nav_manage) {
-            appBarTV.setText("Tools Page");
-            Toast.makeText(this, "Tools", Toast.LENGTH_SHORT).show();
-
-        } else if (id == R.id.nav_share) {
-            appBarTV.setText("Share Page");
-            Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
-
-        } else if (id == R.id.nav_send) {
-            appBarTV.setText("Send");
-            Toast.makeText(this, "Send", Toast.LENGTH_SHORT).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -1,13 +1,13 @@
 package com.example.android.myndapplication.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.myndapplication.R;
 import com.example.android.myndapplication.model.User;
@@ -24,15 +24,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         this.userList = userList;
     }
 
-    @NonNull
     @Override
-    public UserAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public UserAdapter.ViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_list_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull UserAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder( UserAdapter.ViewHolder holder, int position) {
         User user = userList.get(position);
         holder.imageView.setImageResource(user.getImage());
         holder.textView.setText(user.getUserName());
@@ -51,10 +50,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
 
         public ViewHolder(View itemView) {
-            super(itemView);
+            super(itemView);/*
 
             imageView = itemView.findViewById(R.id.user_image);
-            textView = itemView.findViewById(R.id.user_name);
+            textView = itemView.findViewById(R.id.user_name);*/
 
 
         }
