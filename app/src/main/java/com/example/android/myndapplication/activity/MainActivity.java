@@ -2,14 +2,12 @@ package com.example.android.myndapplication.activity;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,7 +15,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.android.myndapplication.fragments.MainFragment;
 import com.example.android.myndapplication.fragments.MainFragmentTab;
 import com.example.android.myndapplication.R;
 import com.google.android.material.navigation.NavigationView;
@@ -35,7 +32,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         appBarTV = findViewById(R.id.appbar_text_view);
-
         ImageButton menuRight = findViewById(R.id.leftRight);
         menuRight.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,16 +43,15 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         Bundle bundle = new Bundle();
         bundle.putString("title", "Default");
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        MainFragmentTab fragmentTab = new MainFragmentTab();
+        fragmentTab = new MainFragmentTab();
         fragmentTab.setArguments(bundle);
         ft.replace(R.id.f_container, fragmentTab);
-            ft.commit();
+        ft.commit();
     }
 
     @Override
@@ -101,9 +96,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_default) {
             appBarTV.setText("Main Page");
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_add) {
             appBarTV.setText("Fragment With Tabs");
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             final EditText edittext = new EditText(this);
@@ -112,11 +107,8 @@ public class MainActivity extends AppCompatActivity
 
             alert.setView(edittext);
 
-            alert.setPositiveButton("Yes Option", new DialogInterface.OnClickListener() {
+            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
-                    //What ever you want to do with the value
-                   // Editable YouEditTextValue = edittext.getText();
-                    //OR
                     String value = edittext.getText().toString();
                     Bundle bundle = new Bundle();
                     bundle.putString("title", value);
@@ -132,16 +124,13 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
-            alert.setNegativeButton("No Option", new DialogInterface.OnClickListener() {
+            alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     // what ever you want to do with No option.
                 }
             });
 
             alert.show();
-           /* MainFragmentTab fragmentTab = new MainFragmentTab();
-            ft.replace(R.id.f_container, fragmentTab);
-            ft.commit();*/
 
         }
 

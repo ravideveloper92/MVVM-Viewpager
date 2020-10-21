@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.example.android.myndapplication.R
 import com.example.android.myndapplication.adapter.TabAdapter
+import com.example.android.myndapplication.model.SharedViewModel
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.tabs.*
 
@@ -25,9 +27,16 @@ class MainFragmentTab : Fragment() {
         adapter = TabAdapter(fragmentManager)
         val viewPager = view.findViewById<View>(R.id.viewPager) as ViewPager
         val tabLayout = view.findViewById<View>(R.id.tabLayout) as TabLayout
-
         setViewPager(tabLayout, viewPager, arguments?.getString("title"))
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val model = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        model.message.observe(viewLifecycleOwner, androidx.lifecycle.Observer{
+            removeTab(it)
+        })
     }
 
     private fun setViewPager(
@@ -39,7 +48,7 @@ class MainFragmentTab : Fragment() {
             string.let {
                 if (it != null) {
                     addFragment(
-                        UserRecyclerFragment.newInstance(0),
+                        TabFragment.newInstance(0),
                         it, tabLayout
                     )
                 }
@@ -62,13 +71,12 @@ class MainFragmentTab : Fragment() {
             string.let {
                 if (it != null) {
                     addFragment(
-                        UserRecyclerFragment.newInstance(0),
+                        TabFragment.newInstance(0),
                         it, tabLayout
                     )
                 }
             }
             viewPager?.setAdapter(adapter)
-            Log.d(TAG, "onCreateView: " + viewPager)
         }
         adapter!!.notifyDataSetChanged()
 
